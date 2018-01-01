@@ -5,13 +5,12 @@ const helpers = require('yeoman-test');
 
 describe('generator-yunke-react:app', () => {
   beforeAll(() => {
-    return helpers.run(path.join(__dirname, '../generators/app'))
-      .withPrompts({someAnswer: true});
+    return helpers
+      .run(path.join(__dirname, '../generators/app'))
+      .withOptions({ skipInstall: true });
   });
 
   it('creates files', () => {
-    assert.file([
-      'dummyfile.txt'
-    ]);
+    assert.file(['index.js', 'webpack.config.js']);
   });
 });
