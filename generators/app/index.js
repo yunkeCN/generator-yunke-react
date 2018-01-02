@@ -15,7 +15,7 @@ module.exports = class extends Generator {
     });
     this.option('git-account', {
       type: String,
-      required: true,
+      required: false,
       default: 'yued',
       desc: 'your gitlab name or organization name'
     });
@@ -32,6 +32,10 @@ module.exports = class extends Generator {
     );
     mkdirp(this.options.projName);
     this.destinationRoot(this.destinationPath(this.options.projName));
+    this.composeWith(require.resolve('../git'), {
+      name: this.options.projName,
+      githubAccount: this.options['git-account']
+    });
   }
   _writePackage(extendPkg) {
     this.fs.writeJSON(
