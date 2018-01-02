@@ -16,5 +16,8 @@ describe('generator-yunke-react:app', () => {
 
   it('creates files', () => {
     assert.file(['package.json']);
+    assert.jsonFileContent('package.json', {
+      name: 'awesome-x'
+    });
   });
 });

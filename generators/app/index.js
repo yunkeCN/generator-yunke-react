@@ -11,8 +11,7 @@ module.exports = class extends Generator {
     this.argument('projName', {
       type: String,
       required: true,
-      desc: 'project name',
-      filter: _.kebabCase
+      desc: 'project name'
     });
     this.option('git-account', {
       type: String,
@@ -20,6 +19,7 @@ module.exports = class extends Generator {
       default: 'yued',
       desc: 'your gitlab name or organization name'
     });
+    this.options.projName = _.kebabCase(this.options.projName);
   }
   default() {
     this.log(
@@ -41,7 +41,7 @@ module.exports = class extends Generator {
   }
   Writing() {
     this._writePackage(() => ({
-      name: this.options.name,
+      name: this.options.projName,
       version: '0.0.0',
       description: ''
     }));
