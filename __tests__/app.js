@@ -7,10 +7,14 @@ describe('generator-yunke-react:app', () => {
   beforeAll(() => {
     return helpers
       .run(path.join(__dirname, '../generators/app'))
-      .withOptions({ skipInstall: true });
+      .withOptions({
+        skipInstall: true,
+        gitAccount: 'yued'
+      })
+      .withArguments(['awesomeX']);
   });
 
   it('creates files', () => {
-    assert.file(['index.js', 'webpack.config.js']);
+    assert.file(['package.json']);
   });
 });

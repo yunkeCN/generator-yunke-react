@@ -2,62 +2,49 @@
 const Generator = require('yeoman-generator');
 const chalk = require('chalk');
 const yosay = require('yosay');
-const askName = require('inquirer-npm-name');
-const path = require('path');
 const mkdirp = require('mkdirp');
+const _ = require('lodash');
 
 module.exports = class extends Generator {
   constructor(...o) {
     super(...o);
-    this.props = {};
-  }
-  prompting() {
-    this.log(
-      yosay('Welcome to the peachy ' + chalk.red('generator-yunke-react') + ' generator!')
-    );
-    return askName(
-      {
-        name: 'name',
-        message: 'Your Project name',
-        default: path.basename(process.cwd())
-      },
-      this
-    ).then(props => {
-      this.props.name = props.name;
+    this.argument('projName', {
+      type: String,
+      required: true,
+      desc: 'project name',
+      filter: _.kebabCase
+    });
+    this.option('git-account', {
+      type: String,
+      required: true,
+      default: 'yued',
+      desc: 'your gitlab name or organization name'
     });
   }
   default() {
-    if (path.basename(this.destinationPath()) !== this.props.name) {
-      this.log(
-        `Your project must be inside a folder named 
-        ${this.props.name}
-        \nI'll automatically create this folder.`
-      );
-      mkdirp(this.props.name);
-      this.destinationRoot(this.destinationPath(this.props.name));
-      this.composeWith(require.resolve('generator-node/generators/app'), {
-        boilerplate: false,
-        cli: false,
-        travis: false
-      });
-    }
+    this.log(
+      yosay('Welcome to the peachy ' + chalk.red('generator-yunke-react') + ' generator!')
+    );
+    this.log(
+      `Your project must be inside a folder named 
+      ${this.options.projName}
+      \nI'll automatically create this folder.`
+    );
+    mkdirp(this.options.projName);
+    this.destinationRoot(this.destinationPath(this.options.projName));
   }
-  _writePackage() {
-    const pkg = this.fs.readJSON(this.destinationPath('package.json'), {});
-    pkg.scripts = pkg.scripts || {};
-    pkg.scripts.start = 'webpack-dev-server';
-    this.fs.writeJSON(this.destinationPath('package.json'), pkg);
-  }
-  _writeReactTpl() {
-    this.fs.copy(this.templatePath('index.js'), this.destinationPath('index.js'));
-    this.fs.copy(
-      this.templatePath('webpack.config.js'),
-      this.destinationPath('webpack.config.js')
+  _writePackage(extendPkg) {
+    this.fs.writeJSON(
+      this.destinationPath('package.json'),
+      extendPkg(this.fs.readJSON(this.destinationPath('package.json'), {}))
     );
   }
   Writing() {
-    this._writePackage();
-    this._writeReactTpl();
+    this._writePackage(() => ({
+      name: this.options.name,
+      version: '0.0.0',
+      description: ''
+    }));
   }
 
   Install() {
