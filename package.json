@@ -59,7 +59,8 @@
                     "singleQuote": true,
                     "printWidth": 90
                 }
-            ]
+            ],
+            "linebreak-style": 0
         },
         "plugins": ["prettier"]
     },
